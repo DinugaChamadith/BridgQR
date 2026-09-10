@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BridgQR — Generate Futuristic QR Codes in Seconds</title>
+<meta name="description" content="BridgQR is a fast, privacy-first QR code generator. Create high-resolution, fully customizable QR codes right in your browser — no sign-up, no tracking." />
+<meta name="theme-color" content="#05060a" />
+<meta property="og:title" content="BridgQR — Generate Futuristic QR Codes" />
+<meta property="og:description" content="High-resolution, customizable QR codes generated entirely in your browser." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0e17'/%3E%3Cpath d='M8 8h6v6H8zM18 8h6v6h-6zM8 18h6v6H8zM18 18h3v3h-3zM23 18h3v3h-3zM18 23h3v3h-3zM23 23h3v3h-3z' fill='%2322d3ee'/%3E%3C/svg%3E" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['"Space Grotesk"', 'Inter', 'sans-serif'],
+        },
+        colors: {
+          ink: '#05060a',
+          panel: '#0b0e17',
+        },
+      },
+    },
+  };
+</script>
+
+<!-- QR engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+<style>
+  /* ============ BASE ============ */
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #05060a;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(139, 92, 246, .5); color: #fff; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #05060a; }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #22d3ee, #8b5cf6);
+    border-radius: 99px;
+    border: 3px solid #05060a;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #67e8f9, #a78bfa); }
+
+  /* ============ BACKGROUND ============ */
+  .bg-layer { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+  .orb-1 {
+    width: min(62vw, 620px); aspect-ratio: 1;
+    background: radial-gradient(circle at 30% 30%, rgba(34,211,238,.85), transparent 68%);
+    top: -18%; left: -12%; opacity: .45; animation: drift1 20s ease-in-out infinite;
+  }
+  .orb-2 {
+    width: min(68vw, 700px); aspect-ratio: 1;
+    background: radial-gradient(circle at 60% 40%, rgba(139,92,246,.85), transparent 68%);
+    top: -22%; right: -16%; opacity: .45; animation: drift2 24s ease-in-out infinite;
+  }
+  .orb-3 {
+    width: min(72vw, 780px); aspect-ratio: 1;
+    background: radial-gradient(circle at 50% 50%, rgba(236,72,153,.55), transparent 68%);
+    bottom: -34%; left: 20%; opacity: .3; animation: drift3 28s ease-in-out infinite;
+  }
+  @keyframes drift1 { 50% { transform: translate3d(6vw, 5vh, 0) scale(1.12); } }
+  @keyframes drift2 { 50% { transform: translate3d(-7vw, 7vh, 0) scale(1.08); } }
+  @keyframes drift3 { 50% { transform: translate3d(4vw, -6vh, 0) scale(1.15); } }
+
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,.055) 1px, transparent 1px);
+    background-size: 64px 64px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(ellipse 90% 65% at 50% 0%, #000 0%, transparent 78%);
+  }
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 120% 80% at 50% 0%, transparent 35%, rgba(5,6,10,.9) 100%);
+  }
+
+  /* ============ TYPOGRAPHY FX ============ */
+  .grad-text {
+    background: linear-gradient(100deg, #22d3ee 0%, #818cf8 30%, #c084fc 55%, #ec4899 78%, #22d3ee 100%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    animation: gradShift 8s linear infinite;
+  }
+  @keyframes gradShift { to { background-position: 220% 0; } }
+
+  /* ============ NAV ============ */
+  #nav {
+    border-bottom: 1px solid transparent;
+    transition: background .4s, backdrop-filter .4s, border-color .4s, box-shadow .4s;
+  }
+  #nav.scrolled {
+    background: rgba(5,6,10,.72);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    border-bottom-color: rgba(255,255,255,.07);
+    box-shadow: 0 10px 40px -22px rgba(0,0,0,.95);
+  }
+  .nav-link { position: relative; color: #94a3b8; transition: color .3s; }
+  .nav-link:hover { color: #fff; }
+  .nav-link::after {
+    content: ''; position: absolute; left: 0; bottom: -6px;
+    height: 1.5px; width: 0; border-radius: 2px;
+    background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+    transition: width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  #mobileMenu {
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height .5s cubic-bezier(.16,1,.3,1), opacity .4s;
+  }
+  #mobileMenu.open { max-height: 340px; opacity: 1; }
+
+  /* ============ REVEAL ============ */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    position: relative; overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    font-weight: 600; border-radius: 14px; cursor: pointer;
+    transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s, background .3s, border-color .3s, color .3s;
+  }
+  .btn:active { transform: translateY(0) scale(.985); }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(34,211,238,.55); }
+
+  .btn-primary {
+    background: linear-gradient(120deg, #22d3ee, #6366f1 50%, #a855f7);
+    color: #fff;
+    box-shadow: 0 12px 34px -14px rgba(99,102,241,.95), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 46px -14px rgba(34,211,238,.9), inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .btn-primary::after {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
+    transform: skewX(-18deg);
+    transition: left .7s cubic-bezier(.16,1,.3,1);
+  }
+  .btn-primary:hover::after { left: 120%; }
+
+  .btn-ghost {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #cbd5e1;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(34,211,238,.45);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* ============ CARD ============ */
+  .border-gradient {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(160deg, rgba(11,14,23,.78), rgba(9,11,18,.68)) padding-box,
+      linear-gradient(150deg, rgba(34,211,238,.45), rgba(139,92,246,.25) 40%, rgba(236,72,153,.35) 75%, rgba(34,211,238,.35)) border-box;
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+  .card-aurora {
+    position: absolute; inset: -34px; z-index: 0; border-radius: 46px;
+    background: conic-gradient(from 0deg, #22d3ee, #8b5cf6, #ec4899, #22d3ee);
+    filter: blur(64px); opacity: .22;
+    animation: spinSlow 16s linear infinite;
+  }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+  /* ============ FORM CONTROLS ============ */
+  .field {
+    width: 100%; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.03);
+    color: #f1f5f9; font-size: .875rem;
+    outline: none;
+    transition: border-color .3s, background .3s, box-shadow .3s;
+  }
+  .field:focus {
+    border-color: rgba(34,211,238,.6);
+    background: rgba(255,255,255,.06);
+    box-shadow: 0 0 0 4px rgba(34,211,238,.1);
+  }
+  .field::placeholder { color: #64748b; }
+
+  input[type="range"].range {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 999px;
+    background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+    outline: none; cursor: pointer;
+  }
+  input[type="range"].range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 3px solid #0b0e17;
+    box-shadow: 0 0 0 3px rgba(34,211,238,.5), 0 6px 16px -4px rgba(34,211,238,.9);
+    transition: transform .2s, box-shadow .2s;
+  }
+  input[type="range"].range::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 5px rgba(34,211,238,.35), 0 6px 20px -4px rgba(34,211,238,1);
+  }
+  input[type="range"].range::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; border: 3px solid #0b0e17;
+    box-shadow: 0 0 0 3px rgba(34,211,238,.5); cursor: pointer;
+  }
+  input[type="range"].range::-moz-range-track {
+    height: 6px; border-radius: 999px;
+    background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+  }
+
+  input[type="color"] {
+    -webkit-appearance: none; appearance: none;
+    width: 42px; height: 42px; padding: 0;
+    border: none; background: transparent; cursor: pointer; border-radius: 11px;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  input[type="color"]::-webkit-color-swatch {
+    border: 1px solid rgba(255,255,255,.22); border-radius: 10px;
+  }
+  input[type="color"]::-moz-color-swatch {
+    border: 1px solid rgba(255,255,255,.22); border-radius: 10px;
+  }
+
+  .seg {
+    padding: .6rem 0; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.02);
+    color: #94a3b8; font-size: .75rem; font-weight: 600;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.16,1,.3,1);
+  }
+  .seg:hover { border-color: rgba(34,211,238,.4); color: #e2e8f0; }
+  .seg.active {
+    background: linear-gradient(135deg, rgba(34,211,238,.2), rgba(139,92,246,.2));
+    border-color: rgba(34,211,238,.6);
+    color: #fff;
+    box-shadow: 0 0 22px -6px rgba(34,211,238,.8);
+  }
+
+  /* ============ QR PREVIEW ============ */
+  .qr-frame {
+    position: relative;
+    padding: 14px;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.1),
+      0 30px 60px -28px rgba(34,211,238,.65);
+  }
+  .qr-frame canvas { display: block; width: 100%; height: auto; border-radius: 8px; }
+
+  .qr-frame.pulse { animation: qrPulse .7s cubic-bezier(.16,1,.3,1); }
+  @keyframes qrPulse {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(34,211,238,0), 0 30px 60px -25px rgba(34,211,238,.85); }
+    100% { transform: scale(1); }
+  }
+
+  .scanline {
+    position: absolute; left: 14px; right: 14px; top: 14px; height: 18%;
+    border-radius: 8px; pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(34,211,238,.4), transparent);
+    mix-blend-mode: multiply;
+    animation: scan 3.4s ease-in-out infinite;
+  }
+  @keyframes scan {
+    0%, 100% { transform: translateY(0); opacity: 0; }
+    12%      { opacity: 1; }
+    50%      { transform: translateY(340%); opacity: .9; }
+    88%      { opacity: 0; }
+  }
+
+  .corner {
+    position: absolute; width: 20px; height: 20px;
+    border: 2px solid rgba(34,211,238,.75);
+    pointer-events: none;
+  }
+  .corner.tl { top: -9px; left: -9px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+  .corner.tr { top: -9px; right: -9px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
+  .corner.bl { bottom: -9px; left: -9px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
+  .corner.br { bottom: -9px; right: -9px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+
+  /* ============ FEATURE CARDS ============ */
+  .feature-card { position: relative; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .5s, background .5s; }
+  .feature-card::before {
+    content: ''; position: absolute; inset-inline: 1.5rem; top: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,211,238,.7), transparent);
+    opacity: 0; transition: opacity .5s;
+  }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-card:hover { transform: translateY(-8px); }
+
+  /* ============ FAQ ============ */
+  details summary::-webkit-details-marker { display: none; }
+  details summary { list-style: none; }
+  details[open] .faq-icon { transform: rotate(135deg); }
+  .faq-icon { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed; left: 50%; bottom: 32px; z-index: 100;
+    display: flex; align-items: center; gap: .65rem;
+    padding: .8rem 1.15rem; border-radius: 14px;
+    background: rgba(11,14,23,.92);
+    border: 1px solid rgba(255,255,255,.12);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px -24px rgba(0,0,0,.95);
+    font-size: .85rem; color: #e2e8f0;
+    opacity: 0; transform: translate(-50%, 140%);
+    transition: transform .5s cubic-bezier(.16,1,.3,1), opacity .4s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22d3ee; box-shadow: 0 0 12px #22d3ee;
+  }
+  .toast.error .dot { background: #f43f5e; box-shadow: 0 0 12px #f43f5e; }
+
+  /* ============ MISC ============ */
+  .stat-glow { text-shadow: 0 0 24px rgba(34,211,238,.6); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+    }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+
+<body class="min-h-screen antialiased">
+
+<!-- ================= BACKGROUND ================= -->
+<div class="bg-layer" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-lines"></div>
+  <div class="vignette"></div>
+</div>
+
+<!-- ================= NAV ================= -->
+<header id="nav" class="fixed inset-x-0 top-0 z-50">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between md:h-20">
+
+      <!-- Logo -->
+      <a href="#home" class="group flex items-center gap-2.5">
+        <span class="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 shadow-lg shadow-cyan-500/30 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zM14 4h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zM14 14h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+          </svg>
+        </span>
+        <span class="font-display text-lg font-bold tracking-tight text-white">
+          Bridg<span class="grad-text">QR</span>
+        </span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden items-center gap-9 lg:flex" aria-label="Primary">
+        <a href="#generator" class="nav-link text-sm font-medium">Generator</a>
+        <a href="#features" class="nav-link text-sm font-medium">Features</a>
+        <a href="#faq" class="nav-link text-sm font-medium">FAQ</a>
+      </nav>
+
+      <div class="hidden lg:block">
+        <a href="#generator" class="btn btn-primary px-5 py-2.5 text-sm">Create QR</a>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button id="menuBtn" type="button" aria-label="Toggle navigation menu" aria-expanded="false"
+        class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:border-cyan-400/40 hover:text-white">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="lg:hidden border-t border-white/[0.06] bg-[#05060a]/95 backdrop-blur-xl">
+    <div class="space-y-1 px-4 py-4">
+      <a href="#generator" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Generator</a>
+      <a href="#features" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Features</a>
+      <a href="#faq" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">FAQ</a>
+      <a href="#generator" class="btn btn-primary mt-2 w-full py-3 text-sm">Create QR</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section id="home" class="relative z-10 px-4 pb-16 pt-32 sm:px-6 sm:pb-20 sm:pt-40 lg:px-8">
+  <div class="mx-auto max-w-4xl text-center">
+
+    <div class="reveal inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-medium text-slate-300 backdrop-blur">
+      <span class="relative flex h-2 w-2">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75"></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-cyan-400"></span>
+      </span>
+      Runs 100% in your browser · Zero tracking
+    </div>
+
+    <h1 class="reveal mt-7 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl" style="transition-delay:.08s">
+      Generate QR codes<br class="hidden sm:block" />
+      <span class="grad-text">at the speed of light</span>
+    </h1>
+
+    <p class="reveal mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg" style="transition-delay:.16s">
+      BridgQR turns any link into a crisp, high-resolution QR code — fully customizable,
+      instantly downloadable, and completely private.
+    </p>
+
+    <div class="reveal mt-9 flex flex-wrap items-center justify-center gap-3" style="transition-delay:.24s">
+      <a href="#generator" class="btn btn-primary px-7 py-3.5 text-sm">
+        Start generating
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12l-7.5 7.5M21 12H3"/>
+        </svg>
+      </a>
+      <a href="#features" class="btn btn-ghost px-7 py-3.5 text-sm">Explore features</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="reveal mx-auto mt-16 grid max-w-lg grid-cols-3 gap-4" style="transition-delay:.32s">
+      <div>
+        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">0</p>
+        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Bytes stored</p>
+      </div>
+      <div class="border-x border-white/[0.07]">
+        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">1024</p>
+        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Max export px</p>
+      </div>
+      <div>
+        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">100%</p>
+        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Free forever</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GENERATOR ================= -->
+<section id="generator" class="relative z-10 scroll-mt-24 px-4 pb-20 sm:px-6 sm:pb-28 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+    <div class="relative">
+      <div class="card-aurora" aria-hidden="true"></div>
+
+      <div class="border-gradient relative z-10 overflow-hidden rounded-[28px]">
+        <div class="grid lg:grid-cols-[1fr_400px]">
+
+          <!-- ---------- CONTROLS ---------- -->
+          <div class="p-6 sm:p-8 lg:p-10">
+
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/>
+                </svg>
+              </span>
+              <div>
+                <h2 class="font-display text-lg font-semibold text-white">Generator</h2>
+                <p class="text-xs text-slate-500">Customize and export in real time</p>
+              </div>
+            </div>
+
+            <!-- URL -->
+            <div class="mt-8">
+              <label for="urlInput" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Destination URL
+              </label>
+              <div class="group relative">
+                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 transition-colors group-focus-within:text-cyan-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/>
+                  </svg>
+                </span>
+                <input id="urlInput" type="text" inputmode="url" spellcheck="false" autocomplete="off"
+                  value="https://example.com" placeholder="https://your-link.com"
+                  class="field py-3.5 pl-11 pr-4" />
+              </div>
+              <p class="mt-2 text-[11px] text-slate-500">The code updates live as you type.</p>
+            </div>
+
+            <!-- Size -->
+            <div class="mt-6">
+              <div class="mb-3 flex items-center justify-between">
+                <label for="sizeRange" class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Export resolution</label>
+                <span id="sizeValue" class="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-[11px] text-cyan-300">512 px</span>
+              </div>
+              <input id="sizeRange" type="range" min="256" max="1024" step="32" value="512" class="range" aria-label="Export resolution" />
+            </div>
+
+            <!-- Colors -->
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Foreground</label>
+                <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
+                  <input id="fgColor" type="color" value="#0f172a" aria-label="Foreground color" />
+                  <span id="fgHex" class="font-mono text-xs uppercase text-slate-400">#0f172a</span>
+                </div>
+              </div>
+              <div>
+                <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Background</label>
+                <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
+                  <input id="bgColor" type="color" value="#ffffff" aria-label="Background color" />
+                  <span id="bgHex" class="font-mono text-xs uppercase text-slate-400">#ffffff</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error correction -->
+            <div class="mt-6">
+              <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Error correction</label>
+              <div id="levelGroup" class="grid grid-cols-4 gap-2" role="group" aria-label="Error correction level">
+                <button type="button" data-level="L" class="seg">L</button>
+                <button type="button" data-level="M" class="seg">M</button>
+                <button type="button" data-level="Q" class="seg">Q</button>
+                <button type="button" data-level="H" class="seg active">H</button>
+              </div>
+              <p class="mt-2 text-[11px] leading-relaxed text-slate-500">
+                Higher levels stay scannable even when the code is partially damaged or covered.
+              </p>
+            </div>
+
+            <button id="generateBtn" type="button" class="btn btn-ghost mt-7 w-full py-3.5 text-sm">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+              </svg>
+              Regenerate QR code
+            </button>
+          </div>
+
+          <!-- ---------- PREVIEW ---------- -->
+          <div class="flex flex-col items-center justify-center gap-6 border-t border-white/[0.06] bg-white/[0.015] p-6 sm:p-8 lg:border-l lg:border-t-0">
+            <div class="w-full max-w-[300px]">
+              <div class="relative">
+                <span class="corner tl"></span>
+                <span class="corner tr"></span>
+                <span class="corner bl"></span>
+                <span class="corner br"></span>
+                <div id="qrFrame" class="qr-frame">
+                  <canvas id="qrcode" aria-label="Generated QR code"></canvas>
+                  <div class="scanline" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-full text-center">
+              <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Encoded destination</p>
+              <p id="urlLabel" class="mt-1.5 truncate font-mono text-xs text-cyan-300">https://example.com</p>
+            </div>
+
+            <div class="grid w-full gap-3">
+              <button id="downloadBtn" type="button" class="btn btn-primary w-full py-3.5 text-sm">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                </svg>
+                Download PNG
+              </button>
+              <button id="copyBtn" type="button" class="btn btn-ghost w-full py-3 text-sm">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"/>
+                </svg>
+                Copy image
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section id="features" class="relative z-10 scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="reveal text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400">Capabilities</p>
+      <h2 class="reveal mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
+        Built for the modern web
+      </h2>
+      <p class="reveal mt-4 text-slate-400" style="transition-delay:.12s">
+        Everything you need to ship beautiful, scannable codes — and nothing you don't.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]">
+        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-base font-semibold text-white">Instant rendering</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Your code redraws live as you type, recolor, or resize — no page reloads, no waiting.
+        </p>
+      </div>
+
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.08s">
+        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-base font-semibold text-white">High-res export</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Download crisp PNGs up to 1024×1024 — ready for print, packaging, or retina displays.
+        </p>
+      </div>
+
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.16s">
+        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-base font-semibold text-white">Full customization</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Dial in foreground and background colors plus error correction to match your brand.
+        </p>
+      </div>
+
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.24s">
+        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-base font-semibold text-white">Privacy by design</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">
+          Everything is generated locally in your browser. Your links never touch a server.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="relative z-10 scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+  <div class="mx-auto max-w-3xl">
+
+    <div class="text-center">
+      <p class="reveal text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400">FAQ</p>
+      <h2 class="reveal mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
+        Questions, answered
+      </h2>
+    </div>
+
+    <div class="mt-12 space-y-3">
+
+      <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+          Is BridgQR really free?
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-400">
+          Yes — every feature is free and unlimited. There are no accounts, watermarks, or usage caps.
+        </p>
+      </details>
+
+      <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.06s">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+          Do my links get stored anywhere?
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-400">
+          No. The QR code is generated entirely on your device using JavaScript. Nothing is uploaded,
+          logged, or shared — you can even disconnect from the internet after the page loads.
+        </p>
+      </details>
+
+      <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.12s">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+          Which export resolution should I pick?
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-400">
+          Use 256–512 px for screens and digital signage. Choose 1024 px for print, where the code
+          may be reproduced at a large physical size.
+        </p>
+      </details>
+
+      <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.18s">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+          Will a custom-colored code still scan?
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-400">
+          As long as there's strong contrast between the foreground and background — dark modules on a
+          light background works best. Always test-scan before printing at scale.
+        </p>
+      </details>
+
+      <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.24s">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+          Can I use the generated codes commercially?
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+        </summary>
+        <p class="mt-3 text-sm leading-relaxed text-slate-400">
+          Absolutely. The codes you generate are yours to use anywhere — personal or commercial,
+          with no attribution required.
+        </p>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="relative z-10 mt-10 border-t border-white/[0.07]">
+  <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+      <div class="lg:col-span-2">
+        <a href="#home" class="flex items-center gap-2.5">
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 shadow-lg shadow-cyan-500/30">
+            <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zM14 4h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zM14 14h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+            </svg>
+          </span>
+          <span class="font-display text-lg font-bold tracking-tight text-white">Bridg<span class="grad-text">QR</span></span>
+        </a>
+        <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-400">
+          A blazing-fast, privacy-first QR code generator built for the modern web.
+          No accounts. No tracking. No limits.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Product</h4>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li><a href="#generator" class="text-slate-400 transition hover:text-cyan-300">Generator</a></li>
+          <li><a href="#features" class="text-slate-400 transition hover:text-cyan-300">Features</a></li>
+          <li><a href="#faq" class="text-slate-400 transition hover:text-cyan-300">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Resources</h4>
+        <ul class="mt-4 space-y-3 text-sm">
+          <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Documentation</a></li>
+          <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Privacy</a></li>
+          <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Terms</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.07] pt-6 sm:flex-row">
+      <p class="text-xs text-slate-500">© <span id="year">2025</span> BridgQR. All rights reserved.</p>
+      <p class="text-xs text-slate-500">Crafted with <span class="text-pink-400">♥</span> for the open web</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="toTop" type="button" aria-label="Back to top"
+  class="pointer-events-none fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 opacity-0 backdrop-blur transition-all duration-300 hover:border-cyan-400/50 hover:bg-white/[0.1] hover:text-white">
+  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75 12 8.25l7.5 7.5"/>
+  </svg>
+</button>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite">
+  <span class="dot"></span>
+  <span id="toastMsg">Done</span>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ============================================================
+     PAGE CHROME
+     ============================================================ */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const nav = document.getElementById('nav');
+  const toTop = document.getElementById('toTop');
+
+  function onScroll() {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 20);
+
+    if (y > 500) {
+      toTop.classList.remove('opacity-0', 'pointer-events-none');
+    } else {
+      toTop.classList.add('opacity-0', 'pointer-events-none');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* Mobile menu */
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', function () {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  mobileMenu.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      mobileMenu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* Scroll reveal */
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* Toast */
+  const toastEl = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function toast(message, isError) {
+    toastMsg.textContent = message;
+    toastEl.classList.toggle('error', !!isError);
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove('show');
+    }, 2400);
+  }
+
+  /* ============================================================
+     QR GENERATOR
+     ============================================================ */
+  const canvas      = document.getElementById('qrcode');
+  const urlInput    = document.getElementById('urlInput');
+  const urlLabel    = document.getElementById('urlLabel');
+  const sizeRange   = document.getElementById('sizeRange');
+  const sizeValue   = document.getElementById('sizeValue');
+  const fgColor     = document.getElementById('fgColor');
+  const bgColor     = document.getElementById('bgColor');
+  const fgHex       = document.getElementById('fgHex');
+  const bgHex       = document.getElementById('bgHex');
+  const levelGroup  = document.getElementById('levelGroup');
+  const qrFrame     = document.getElementById('qrFrame');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const copyBtn     = document.getElementById('copyBtn');
+  const generateBtn = document.getElementById('generateBtn');
+
+  const state = {
+    value: 'https://example.com',
+    size: 512,
+    fg: '#0f172a',
+    bg: '#ffffff',
+    level: 'H'
+  };
+
+  let qr = null;
+  try {
+    qr = new QRious({
+      element: canvas,
+      value: state.value,
+      size: state.size,
+      foreground: state.fg,
+      background: state.bg,
+      level: state.level
+    });
+  } catch (err) {
+    console.error('QRious failed to initialise:', err);
+  }
+
+  /**
+   * Push current state into the QR engine and repaint.
+   * @param {boolean} pulse - play the "regenerated" animation
+   */
+  function render(pulse) {
+    if (qr) {
+      try {
+        qr.value = state.value || ' ';
+        qr.size = state.size;
+        qr.foreground = state.fg;
+        qr.background = state.bg;
+        qr.level = state.level;
+        if (typeof qr.update === 'function') qr.update();
+      } catch (err) {
+        console.error('QR render error:', err);
+      }
+    }
+
+    urlLabel.textContent = state.value;
+    urlLabel.title = state.value;
+
+    if (pulse) {
+      qrFrame.classList.remove('pulse');
+      void qrFrame.offsetWidth; /* force reflow to restart animation */
+      qrFrame.classList.add('pulse');
+    }
+  }
+
+  /* ---- URL input (live, debounced) ---- */
+  let inputTimer;
+  urlInput.addEventListener('input', function () {
+    clearTimeout(inputTimer);
+    inputTimer = setTimeout(function () {
+      const v = urlInput.value.trim();
+      if (v) {
+        state.value = v;
+        render(false);
+      }
+    }, 280);
+  });
+
+  urlInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      clearTimeout(inputTimer);
+      const v = urlInput.value.trim();
+      if (v) {
+        state.value = v;
+        render(true);
+      }
+    }
+  });
+
+  /* ---- Explicit regenerate ---- */
+  generateBtn.addEventListener('click', function () {
+    const v = urlInput.value.trim();
+    if (v) state.value = v;
+    render(true);
+    toast('QR code regenerated');
+  });
+
+  /* ---- Resolution ---- */
+  sizeRange.addEventListener('input', function () {
+    state.size = parseInt(sizeRange.value, 10);
+    sizeValue.textContent = state.size + ' px';
+    render(false);
+  });
+
+  /* ---- Colors ---- */
+  fgColor.addEventListener('input', function () {
+    state.fg = fgColor.value;
+    fgHex.textContent = fgColor.value;
+    render(false);
+  });
+  bgColor.addEventListener('input', function () {
+    state.bg = bgColor.value;
+    bgHex.textContent = bgColor.value;
+    render(false);
+  });
+
+  /* ---- Error correction ---- */
+  levelGroup.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-level]');
+    if (!btn) return;
+    state.level = btn.dataset.level;
+    levelGroup.querySelectorAll('[data-level]').forEach(function (b) {
+      b.classList.toggle('active', b === btn);
+    });
+    render(false);
+  });
+
+  /* ---- Filename helper ---- */
+  function buildFilename() {
+    try {
+      const url = new URL(state.value);
+      const host = url.hostname
+        .replace(/^www\./i, '')
+        .replace(/[^a-z0-9]/gi, '_')
+        .toLowerCase();
+      return (host || 'bridgqr') + '-qr.png';
+    } catch (err) {
+      return 'bridgqr-code.png';
+    }
+  }
+
+  /* ---- Download PNG ---- */
+  downloadBtn.addEventListener('click', function () {
+    try {
+      const link = document.createElement('a');
+      link.download = buildFilename();
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast('QR code downloaded');
+    } catch (err) {
+      console.error(err);
+      toast('Download failed — try again', true);
+    }
+  });
+
+  /* ---- Copy image to clipboard ---- */
+  copyBtn.addEventListener('click', async function () {
+    try {
+      if (!navigator.clipboard || typeof window.ClipboardItem === 'undefined') {
+        throw new Error('Clipboard image API unsupported');
+      }
+      const blob = await new Promise(function (resolve) {
+        canvas.toBlob(resolve, 'image/png');
+      });
+      if (!blob) throw new Error('Canvas export failed');
+
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ]);
+      toast('QR code copied to clipboard');
+    } catch (err) {
+      console.warn(err);
+      toast('Copy unavailable — use Download instead', true);
+    }
+  });
+
+  /* ---- Initial paint ---- */
+  render(false);
+});
+</script>
+
+</body>
+</html>
