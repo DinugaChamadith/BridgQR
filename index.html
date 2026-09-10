@@ -1,22 +1,93 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BridgQR — Generate Futuristic QR Codes in Seconds</title>
-<meta name="description" content="BridgQR is a fast, privacy-first QR code generator. Create high-resolution, fully customizable QR codes right in your browser — no sign-up, no tracking." />
-<meta name="theme-color" content="#05060a" />
-<meta property="og:title" content="BridgQR — Generate Futuristic QR Codes" />
-<meta property="og:description" content="High-resolution, customizable QR codes generated entirely in your browser." />
-<meta property="og:type" content="website" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0e17'/%3E%3Cpath d='M8 8h6v6H8zM18 8h6v6h-6zM8 18h6v6H8zM18 18h3v3h-3zM23 18h3v3h-3zM18 23h3v3h-3zM23 23h3v3h-3z' fill='%2322d3ee'/%3E%3C/svg%3E" />
+<!-- ============================================================
+     BridgQR — Futuristic QR Code Generator
+     ------------------------------------------------------------
+     A single-file, privacy-first QR code generator.
+     • No backend • No tracking • Runs 100% in the browser
+     ------------------------------------------------------------
+     QUICK CUSTOMIZATION
+     • Brand name .......... search for "BridgQR" (brand text)
+     • Site URL ............ search for "bridgqr.example.com"
+     • OG image ............ search for "og-image.png"
+     • Accent colors ....... search for "#22d3ee" and "#8b5cf6"
+     • Default URL ......... search for "https://example.com"
+     ============================================================ -->
 
-<!-- Fonts -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+<!-- ================= PRIMARY META ================= -->
+<title>BridgQR — Free Futuristic QR Code Generator | No Sign-Up, No Tracking</title>
+<meta name="title" content="BridgQR — Free Futuristic QR Code Generator" />
+<meta name="description" content="Generate crisp, high-resolution QR codes instantly in your browser. Fully customizable colors, resolution up to 1024px, PNG export, and 100% privacy — no sign-up, no tracking, no servers." />
+<meta name="keywords" content="QR code generator, free QR code, custom QR code, high resolution QR, QR code maker, privacy QR generator, online QR, PNG QR code, BridgQR" />
+<meta name="author" content="BridgQR" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow" />
+<meta name="language" content="English" />
+<meta name="rating" content="general" />
+<meta name="revisit-after" content="7 days" />
+<link rel="canonical" href="https://bridgqr.example.com/" />
+
+<!-- ================= THEME ================= -->
+<meta name="theme-color" content="#05060a" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#05060a" media="(prefers-color-scheme: light)" />
+<meta name="color-scheme" content="dark" />
+
+<!-- ================= OPEN GRAPH / FACEBOOK ================= -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://bridgqr.example.com/" />
+<meta property="og:title" content="BridgQR — Free Futuristic QR Code Generator" />
+<meta property="og:description" content="Create high-resolution, fully customizable QR codes instantly in your browser. No sign-up, no tracking, no servers — 100% privacy-first." />
+<meta property="og:image" content="https://bridgqr.example.com/og-image.png" />
+<meta property="og:image:secure_url" content="https://bridgqr.example.com/og-image.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="BridgQR — Generate futuristic QR codes in seconds" />
+<meta property="og:site_name" content="BridgQR" />
+<meta property="og:locale" content="en_US" />
+
+<!-- ================= TWITTER / X ================= -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@bridgqr" />
+<meta name="twitter:creator" content="@bridgqr" />
+<meta name="twitter:url" content="https://bridgqr.example.com/" />
+<meta name="twitter:title" content="BridgQR — Free Futuristic QR Code Generator" />
+<meta name="twitter:description" content="Create high-resolution, fully customizable QR codes instantly in your browser. No sign-up, no tracking — 100% privacy-first." />
+<meta name="twitter:image" content="https://bridgqr.example.com/og-image.png" />
+<meta name="twitter:image:alt" content="BridgQR — Generate futuristic QR codes in seconds" />
+
+<!-- ================= ICONS ================= -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b0e17'/%3E%3Cpath d='M8 8h6v6H8zM18 8h6v6h-6zM8 18h6v6H8zM18 18h3v3h-3zM23 18h3v3h-3zM18 23h3v3h-3zM23 23h3v3h-3z' fill='%2322d3ee'/%3E%3C/svg%3E" />
+<link rel="mask-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8 8h6v6H8zM18 8h6v6h-6zM8 18h6v6H8zM18 18h3v3h-3zM23 18h3v3h-3zM18 23h3v3h-3zM23 23h3v3h-3z' fill='%2322d3ee'/%3E%3C/svg%3E" color="#22d3ee" />
+<!-- TODO: Add a 180×180 PNG at /apple-touch-icon.png for iOS home-screen support -->
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+<!-- ================= PWA / MOBILE WEB APP ================= -->
+<!-- TODO: Uncomment and add a manifest.json in the repo root for full PWA support -->
+<!-- <link rel="manifest" href="manifest.json" /> -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BridgQR" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="msapplication-TileColor" content="#05060a" />
+
+<!-- ================= PERFORMANCE HINTS ================= -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdn.tailwindcss.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+<!-- ================= FONTS ================= -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-<!-- Tailwind -->
+<!-- ================= TAILWIND ================= -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -35,13 +106,52 @@
   };
 </script>
 
-<!-- QR engine -->
+<!-- ================= QR ENGINE ================= -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
+<!-- ================= STRUCTURED DATA (SEO) ================= -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BridgQR",
+  "alternateName": "BridgQR QR Code Generator",
+  "url": "https://bridgqr.example.com/",
+  "description": "A fast, privacy-first QR code generator. Create high-resolution, fully customizable QR codes right in your browser — no sign-up, no tracking.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (Web)",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Real-time QR code generation",
+    "Custom foreground and background colors",
+    "Adjustable export resolution up to 1024px",
+    "PNG download and clipboard copy",
+    "Error correction levels L/M/Q/H",
+    "100% client-side privacy — no tracking, no servers"
+  ],
+  "screenshot": "https://bridgqr.example.com/og-image.png",
+  "author": {
+    "@type": "Organization",
+    "name": "BridgQR"
+  }
+}
+</script>
+
 <style>
-  /* ============ BASE ============ */
+  /* ============================================================
+     BASE
+     ============================================================ */
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
   body {
     margin: 0;
     background: #05060a;
@@ -49,19 +159,53 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
   }
   ::selection { background: rgba(139, 92, 246, .5); color: #fff; }
 
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-track { background: #05060a; }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #22d3ee, #8b5cf6);
-    border-radius: 99px;
-    border: 3px solid #05060a;
+  /* Custom scrollbar (desktop only) */
+  @media (hover: hover) and (pointer: fine) {
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #05060a; }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #22d3ee, #8b5cf6);
+      border-radius: 99px;
+      border: 3px solid #05060a;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #67e8f9, #a78bfa); }
   }
-  ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #67e8f9, #a78bfa); }
 
-  /* ============ BACKGROUND ============ */
+  /* Prevent iOS zoom on input focus (requires ≥16px font) */
+  @media (max-width: 767px) {
+    input:not([type="range"]):not([type="color"]),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Safe-area insets for notched devices */
+  @supports (padding: max(0px)) {
+    #nav {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    footer {
+      padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
+    }
+    #toTop {
+      right: calc(1.5rem + env(safe-area-inset-right, 0px));
+      bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    }
+    .toast {
+      bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  /* ============================================================
+     BACKGROUND
+     ============================================================ */
   .bg-layer { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
   .orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
   .orb-1 {
@@ -97,7 +241,9 @@
     background: radial-gradient(ellipse 120% 80% at 50% 0%, transparent 35%, rgba(5,6,10,.9) 100%);
   }
 
-  /* ============ TYPOGRAPHY FX ============ */
+  /* ============================================================
+     TYPOGRAPHY FX
+     ============================================================ */
   .grad-text {
     background: linear-gradient(100deg, #22d3ee 0%, #818cf8 30%, #c084fc 55%, #ec4899 78%, #22d3ee 100%);
     background-size: 220% 100%;
@@ -107,7 +253,9 @@
   }
   @keyframes gradShift { to { background-position: 220% 0; } }
 
-  /* ============ NAV ============ */
+  /* ============================================================
+     NAV
+     ============================================================ */
   #nav {
     border-bottom: 1px solid transparent;
     transition: background .4s, backdrop-filter .4s, border-color .4s, box-shadow .4s;
@@ -131,22 +279,28 @@
 
   #mobileMenu {
     max-height: 0; opacity: 0; overflow: hidden;
+    overscroll-behavior: contain;
     transition: max-height .5s cubic-bezier(.16,1,.3,1), opacity .4s;
   }
-  #mobileMenu.open { max-height: 340px; opacity: 1; }
+  #mobileMenu.open { max-height: 400px; opacity: 1; }
 
-  /* ============ REVEAL ============ */
+  /* ============================================================
+     REVEAL ANIMATION
+     ============================================================ */
   .reveal {
     opacity: 0; transform: translateY(30px);
     transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1);
   }
   .reveal.in { opacity: 1; transform: none; }
 
-  /* ============ BUTTONS ============ */
+  /* ============================================================
+     BUTTONS
+     ============================================================ */
   .btn {
     position: relative; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
     font-weight: 600; border-radius: 14px; cursor: pointer;
+    min-height: 44px; /* accessible tap target */
     transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s, background .3s, border-color .3s, color .3s;
   }
   .btn:active { transform: translateY(0) scale(.985); }
@@ -181,7 +335,9 @@
     transform: translateY(-2px);
   }
 
-  /* ============ CARD ============ */
+  /* ============================================================
+     CARD
+     ============================================================ */
   .border-gradient {
     border: 1px solid transparent;
     background:
@@ -198,7 +354,9 @@
   }
   @keyframes spinSlow { to { transform: rotate(360deg); } }
 
-  /* ============ FORM CONTROLS ============ */
+  /* ============================================================
+     FORM CONTROLS
+     ============================================================ */
   .field {
     width: 100%; border-radius: 14px;
     border: 1px solid rgba(255,255,255,.1);
@@ -219,10 +377,11 @@
     width: 100%; height: 6px; border-radius: 999px;
     background: linear-gradient(90deg, #22d3ee, #8b5cf6);
     outline: none; cursor: pointer;
+    touch-action: pan-y;
   }
   input[type="range"].range::-webkit-slider-thumb {
     -webkit-appearance: none; appearance: none;
-    width: 18px; height: 18px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
     background: #fff; border: 3px solid #0b0e17;
     box-shadow: 0 0 0 3px rgba(34,211,238,.5), 0 6px 16px -4px rgba(34,211,238,.9);
     transition: transform .2s, box-shadow .2s;
@@ -232,7 +391,7 @@
     box-shadow: 0 0 0 5px rgba(34,211,238,.35), 0 6px 20px -4px rgba(34,211,238,1);
   }
   input[type="range"].range::-moz-range-thumb {
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 20px; height: 20px; border-radius: 50%;
     background: #fff; border: 3px solid #0b0e17;
     box-shadow: 0 0 0 3px rgba(34,211,238,.5); cursor: pointer;
   }
@@ -243,8 +402,9 @@
 
   input[type="color"] {
     -webkit-appearance: none; appearance: none;
-    width: 42px; height: 42px; padding: 0;
+    width: 44px; height: 44px; padding: 0;
     border: none; background: transparent; cursor: pointer; border-radius: 11px;
+    flex-shrink: 0;
   }
   input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
   input[type="color"]::-webkit-color-swatch {
@@ -255,7 +415,8 @@
   }
 
   .seg {
-    padding: .6rem 0; border-radius: 12px;
+    padding: .65rem 0; border-radius: 12px;
+    min-height: 42px;
     border: 1px solid rgba(255,255,255,.1);
     background: rgba(255,255,255,.02);
     color: #94a3b8; font-size: .75rem; font-weight: 600;
@@ -263,6 +424,7 @@
     transition: all .25s cubic-bezier(.16,1,.3,1);
   }
   .seg:hover { border-color: rgba(34,211,238,.4); color: #e2e8f0; }
+  .seg:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(34,211,238,.4); }
   .seg.active {
     background: linear-gradient(135deg, rgba(34,211,238,.2), rgba(139,92,246,.2));
     border-color: rgba(34,211,238,.6);
@@ -270,7 +432,9 @@
     box-shadow: 0 0 22px -6px rgba(34,211,238,.8);
   }
 
-  /* ============ QR PREVIEW ============ */
+  /* ============================================================
+     QR PREVIEW
+     ============================================================ */
   .qr-frame {
     position: relative;
     padding: 14px;
@@ -313,7 +477,9 @@
   .corner.bl { bottom: -9px; left: -9px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
   .corner.br { bottom: -9px; right: -9px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
 
-  /* ============ FEATURE CARDS ============ */
+  /* ============================================================
+     FEATURE CARDS
+     ============================================================ */
   .feature-card { position: relative; transition: transform .5s cubic-bezier(.16,1,.3,1), border-color .5s, background .5s; }
   .feature-card::before {
     content: ''; position: absolute; inset-inline: 1.5rem; top: -1px; height: 1px;
@@ -321,15 +487,22 @@
     opacity: 0; transition: opacity .5s;
   }
   .feature-card:hover::before { opacity: 1; }
-  .feature-card:hover { transform: translateY(-8px); }
+  @media (hover: hover) {
+    .feature-card:hover { transform: translateY(-8px); }
+  }
 
-  /* ============ FAQ ============ */
+  /* ============================================================
+     FAQ
+     ============================================================ */
   details summary::-webkit-details-marker { display: none; }
-  details summary { list-style: none; }
+  details summary { list-style: none; cursor: pointer; }
+  details summary:focus-visible { outline: 2px solid rgba(34,211,238,.6); outline-offset: 4px; border-radius: 6px; }
   details[open] .faq-icon { transform: rotate(135deg); }
   .faq-icon { transition: transform .35s cubic-bezier(.16,1,.3,1); }
 
-  /* ============ TOAST ============ */
+  /* ============================================================
+     TOAST
+     ============================================================ */
   .toast {
     position: fixed; left: 50%; bottom: 32px; z-index: 100;
     display: flex; align-items: center; gap: .65rem;
@@ -339,20 +512,26 @@
     -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     box-shadow: 0 24px 60px -24px rgba(0,0,0,.95);
     font-size: .85rem; color: #e2e8f0;
+    max-width: calc(100vw - 2rem);
     opacity: 0; transform: translate(-50%, 140%);
     transition: transform .5s cubic-bezier(.16,1,.3,1), opacity .4s;
     pointer-events: none;
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast .dot {
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
     background: #22d3ee; box-shadow: 0 0 12px #22d3ee;
   }
   .toast.error .dot { background: #f43f5e; box-shadow: 0 0 12px #f43f5e; }
 
-  /* ============ MISC ============ */
+  /* ============================================================
+     MISC
+     ============================================================ */
   .stat-glow { text-shadow: 0 0 24px rgba(34,211,238,.6); }
 
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: .001ms !important;
@@ -360,11 +539,18 @@
       transition-duration: .001ms !important;
     }
     .reveal { opacity: 1 !important; transform: none !important; }
+    .card-aurora { animation: none !important; }
   }
 </style>
 </head>
 
 <body class="min-h-screen antialiased">
+
+<!-- Skip link (a11y) -->
+<a href="#generator"
+   class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-cyan-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">
+  Skip to generator
+</a>
 
 <!-- ================= BACKGROUND ================= -->
 <div class="bg-layer" aria-hidden="true">
@@ -381,7 +567,7 @@
     <div class="flex h-16 items-center justify-between md:h-20">
 
       <!-- Logo -->
-      <a href="#home" class="group flex items-center gap-2.5">
+      <a href="#home" class="group flex items-center gap-2.5" aria-label="BridgQR home">
         <span class="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 shadow-lg shadow-cyan-500/30 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
           <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zM14 4h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zM14 14h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
@@ -404,9 +590,9 @@
       </div>
 
       <!-- Mobile toggle -->
-      <button id="menuBtn" type="button" aria-label="Toggle navigation menu" aria-expanded="false"
-        class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:border-cyan-400/40 hover:text-white">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+      <button id="menuBtn" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileMenu"
+        class="lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-slate-300 transition hover:border-cyan-400/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/>
         </svg>
       </button>
@@ -416,9 +602,9 @@
   <!-- Mobile menu -->
   <div id="mobileMenu" class="lg:hidden border-t border-white/[0.06] bg-[#05060a]/95 backdrop-blur-xl">
     <div class="space-y-1 px-4 py-4">
-      <a href="#generator" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Generator</a>
-      <a href="#features" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Features</a>
-      <a href="#faq" class="block rounded-lg px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">FAQ</a>
+      <a href="#generator" class="block rounded-lg px-4 py-3.5 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Generator</a>
+      <a href="#features" class="block rounded-lg px-4 py-3.5 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">Features</a>
+      <a href="#faq" class="block rounded-lg px-4 py-3.5 text-sm text-slate-300 transition hover:bg-white/5 hover:text-white">FAQ</a>
       <a href="#generator" class="btn btn-primary mt-2 w-full py-3 text-sm">Create QR</a>
     </div>
   </div>
@@ -446,10 +632,10 @@
       instantly downloadable, and completely private.
     </p>
 
-    <div class="reveal mt-9 flex flex-wrap items-center justify-center gap-3" style="transition-delay:.24s">
+    <div class="reveal mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center" style="transition-delay:.24s">
       <a href="#generator" class="btn btn-primary px-7 py-3.5 text-sm">
         Start generating
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12l-7.5 7.5M21 12H3"/>
         </svg>
       </a>
@@ -457,18 +643,18 @@
     </div>
 
     <!-- Stats -->
-    <div class="reveal mx-auto mt-16 grid max-w-lg grid-cols-3 gap-4" style="transition-delay:.32s">
+    <div class="reveal mx-auto mt-14 grid max-w-lg grid-cols-3 gap-2 sm:gap-4" style="transition-delay:.32s">
       <div>
-        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">0</p>
-        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Bytes stored</p>
+        <p class="font-display text-xl font-bold text-white stat-glow sm:text-2xl lg:text-3xl">0</p>
+        <p class="mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:text-[11px] sm:tracking-[0.16em]">Bytes stored</p>
       </div>
       <div class="border-x border-white/[0.07]">
-        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">1024</p>
-        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Max export px</p>
+        <p class="font-display text-xl font-bold text-white stat-glow sm:text-2xl lg:text-3xl">1024</p>
+        <p class="mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:text-[11px] sm:tracking-[0.16em]">Max export px</p>
       </div>
       <div>
-        <p class="font-display text-2xl font-bold text-white stat-glow sm:text-3xl">100%</p>
-        <p class="mt-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 sm:text-[11px]">Free forever</p>
+        <p class="font-display text-xl font-bold text-white stat-glow sm:text-2xl lg:text-3xl">100%</p>
+        <p class="mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:text-[11px] sm:tracking-[0.16em]">Free forever</p>
       </div>
     </div>
   </div>
@@ -480,15 +666,15 @@
     <div class="relative">
       <div class="card-aurora" aria-hidden="true"></div>
 
-      <div class="border-gradient relative z-10 overflow-hidden rounded-[28px]">
+      <div class="border-gradient relative z-10 overflow-hidden rounded-2xl sm:rounded-[28px]">
         <div class="grid lg:grid-cols-[1fr_400px]">
 
           <!-- ---------- CONTROLS ---------- -->
-          <div class="p-6 sm:p-8 lg:p-10">
+          <div class="p-5 sm:p-8 lg:p-10">
 
             <div class="flex items-center gap-3">
               <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/>
                 </svg>
               </span>
@@ -499,21 +685,22 @@
             </div>
 
             <!-- URL -->
-            <div class="mt-8">
+            <div class="mt-7">
               <label for="urlInput" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Destination URL
               </label>
               <div class="group relative">
                 <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500 transition-colors group-focus-within:text-cyan-400">
-                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/>
                   </svg>
                 </span>
                 <input id="urlInput" type="text" inputmode="url" spellcheck="false" autocomplete="off"
+                  autocapitalize="off" autocorrect="off" enterkeyhint="go"
                   value="https://example.com" placeholder="https://your-link.com"
-                  class="field py-3.5 pl-11 pr-4" />
+                  class="field py-3.5 pl-11 pr-4" aria-describedby="urlHelp" />
               </div>
-              <p class="mt-2 text-[11px] text-slate-500">The code updates live as you type.</p>
+              <p id="urlHelp" class="mt-2 text-[11px] text-slate-500">The code updates live as you type.</p>
             </div>
 
             <!-- Size -->
@@ -528,14 +715,14 @@
             <!-- Colors -->
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
               <div>
-                <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Foreground</label>
+                <label for="fgColor" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Foreground</label>
                 <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
                   <input id="fgColor" type="color" value="#0f172a" aria-label="Foreground color" />
                   <span id="fgHex" class="font-mono text-xs uppercase text-slate-400">#0f172a</span>
                 </div>
               </div>
               <div>
-                <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Background</label>
+                <label for="bgColor" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Background</label>
                 <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
                   <input id="bgColor" type="color" value="#ffffff" aria-label="Background color" />
                   <span id="bgHex" class="font-mono text-xs uppercase text-slate-400">#ffffff</span>
@@ -545,12 +732,12 @@
 
             <!-- Error correction -->
             <div class="mt-6">
-              <label class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Error correction</label>
+              <span class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Error correction</span>
               <div id="levelGroup" class="grid grid-cols-4 gap-2" role="group" aria-label="Error correction level">
-                <button type="button" data-level="L" class="seg">L</button>
-                <button type="button" data-level="M" class="seg">M</button>
-                <button type="button" data-level="Q" class="seg">Q</button>
-                <button type="button" data-level="H" class="seg active">H</button>
+                <button type="button" data-level="L" class="seg" aria-pressed="false">L</button>
+                <button type="button" data-level="M" class="seg" aria-pressed="false">M</button>
+                <button type="button" data-level="Q" class="seg" aria-pressed="false">Q</button>
+                <button type="button" data-level="H" class="seg active" aria-pressed="true">H</button>
               </div>
               <p class="mt-2 text-[11px] leading-relaxed text-slate-500">
                 Higher levels stay scannable even when the code is partially damaged or covered.
@@ -558,7 +745,7 @@
             </div>
 
             <button id="generateBtn" type="button" class="btn btn-ghost mt-7 w-full py-3.5 text-sm">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
               </svg>
               Regenerate QR code
@@ -566,8 +753,8 @@
           </div>
 
           <!-- ---------- PREVIEW ---------- -->
-          <div class="flex flex-col items-center justify-center gap-6 border-t border-white/[0.06] bg-white/[0.015] p-6 sm:p-8 lg:border-l lg:border-t-0">
-            <div class="w-full max-w-[300px]">
+          <div class="flex flex-col items-center justify-center gap-6 border-t border-white/[0.06] bg-white/[0.015] p-5 sm:p-8 lg:border-l lg:border-t-0">
+            <div class="w-full max-w-[280px] sm:max-w-[300px]">
               <div class="relative">
                 <span class="corner tl"></span>
                 <span class="corner tr"></span>
@@ -587,13 +774,13 @@
 
             <div class="grid w-full gap-3">
               <button id="downloadBtn" type="button" class="btn btn-primary w-full py-3.5 text-sm">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/>
                 </svg>
                 Download PNG
               </button>
               <button id="copyBtn" type="button" class="btn btn-ghost w-full py-3 text-sm">
-                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"/>
                 </svg>
                 Copy image
@@ -625,7 +812,7 @@
 
       <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]">
         <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
           </svg>
         </div>
@@ -637,7 +824,7 @@
 
       <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.08s">
         <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25"/>
           </svg>
         </div>
@@ -649,7 +836,7 @@
 
       <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.16s">
         <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z"/>
           </svg>
         </div>
@@ -661,7 +848,7 @@
 
       <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.24s">
         <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
           </svg>
         </div>
@@ -689,9 +876,9 @@
     <div class="mt-12 space-y-3">
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+        <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
           Is BridgQR really free?
-          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
         </summary>
@@ -701,9 +888,9 @@
       </details>
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.06s">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+        <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
           Do my links get stored anywhere?
-          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
         </summary>
@@ -714,9 +901,9 @@
       </details>
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.12s">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+        <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
           Which export resolution should I pick?
-          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
         </summary>
@@ -727,9 +914,9 @@
       </details>
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.18s">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+        <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
           Will a custom-colored code still scan?
-          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
         </summary>
@@ -740,9 +927,9 @@
       </details>
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20" style="transition-delay:.24s">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-sm font-medium text-slate-200">
+        <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
           Can I use the generated codes commercially?
-          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="faq-icon h-4 w-4 shrink-0 text-cyan-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
           </svg>
         </summary>
@@ -763,7 +950,7 @@
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
       <div class="lg:col-span-2">
-        <a href="#home" class="flex items-center gap-2.5">
+        <a href="#home" class="flex items-center gap-2.5" aria-label="BridgQR home">
           <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 shadow-lg shadow-cyan-500/30">
             <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zM14 4h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zM14 14h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
@@ -789,6 +976,7 @@
       <div>
         <h4 class="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">Resources</h4>
         <ul class="mt-4 space-y-3 text-sm">
+          <!-- TODO: Replace "#" with real URLs -->
           <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Documentation</a></li>
           <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Privacy</a></li>
           <li><a href="#" class="text-slate-400 transition hover:text-cyan-300">Terms</a></li>
@@ -806,8 +994,8 @@
 
 <!-- Back to top -->
 <button id="toTop" type="button" aria-label="Back to top"
-  class="pointer-events-none fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 opacity-0 backdrop-blur transition-all duration-300 hover:border-cyan-400/50 hover:bg-white/[0.1] hover:text-white">
-  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  class="pointer-events-none fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 opacity-0 backdrop-blur transition-all duration-300 hover:border-cyan-400/50 hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60">
+  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75 12 8.25l7.5 7.5"/>
   </svg>
 </button>
@@ -818,6 +1006,7 @@
   <span id="toastMsg">Done</span>
 </div>
 
+<!-- ================= SCRIPT ================= -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -858,6 +1047,14 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileMenu.classList.remove('open');
       menuBtn.setAttribute('aria-expanded', 'false');
     });
+  });
+  /* Close mobile menu on Escape */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+      mobileMenu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.focus();
+    }
   });
 
   /* Scroll reveal */
@@ -1016,7 +1213,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!btn) return;
     state.level = btn.dataset.level;
     levelGroup.querySelectorAll('[data-level]').forEach(function (b) {
-      b.classList.toggle('active', b === btn);
+      const active = b === btn;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', String(active));
     });
     render(false);
   });
