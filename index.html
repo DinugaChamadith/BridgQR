@@ -15,7 +15,7 @@
 <meta name="language" content="English" />
 <meta name="rating" content="general" />
 <meta name="revisit-after" content="7 days" />
-<link rel="canonical" href="https://bridgqr.example.com/" />
+<link rel="canonical" href="https://dinugachamadith.github.io/BridgQR/" />
 
 <!-- ================= THEME ================= -->
 <meta name="theme-color" content="#05060a" media="(prefers-color-scheme: dark)" />
@@ -24,11 +24,11 @@
 
 <!-- ================= OPEN GRAPH / FACEBOOK ================= -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://bridgqr.example.com/" />
+<meta property="og:url" content="https://dinugachamadith.github.io/BridgQR/" />
 <meta property="og:title" content="BridgQR — Free Futuristic QR Code Generator" />
 <meta property="og:description" content="Create high-resolution, fully customizable QR codes instantly in your browser. No sign-up, no tracking, no servers — 100% privacy-first." />
-<meta property="og:image" content="https://bridgqr.example.com/og-image.png" />
-<meta property="og:image:secure_url" content="https://bridgqr.example.com/og-image.png" />
+<meta property="og:image" content="https://dinugachamadith.github.io/BridgQR/og-image.png" />
+<meta property="og:image:secure_url" content="https://dinugachamadith.github.io/BridgQR/og-image.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -40,10 +40,10 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@bridgqr" />
 <meta name="twitter:creator" content="@bridgqr" />
-<meta name="twitter:url" content="https://bridgqr.example.com/" />
+<meta name="twitter:url" content="https://dinugachamadith.github.io/BridgQR/" />
 <meta name="twitter:title" content="BridgQR — Free Futuristic QR Code Generator" />
 <meta name="twitter:description" content="Create high-resolution, fully customizable QR codes instantly in your browser. No sign-up, no tracking — 100% privacy-first." />
-<meta name="twitter:image" content="https://bridgqr.example.com/og-image.png" />
+<meta name="twitter:image" content="https://dinugachamadith.github.io/BridgQR/og-image.png" />
 <meta name="twitter:image:alt" content="BridgQR — Generate futuristic QR codes in seconds" />
 
 <!-- ================= ICONS ================= -->
@@ -102,7 +102,7 @@
   "@type": "WebApplication",
   "name": "BridgQR",
   "alternateName": "BridgQR QR Code Generator",
-  "url": "https://bridgqr.example.com/",
+  "url": "https://dinugachamadith.github.io/BridgQR/",
   "description": "A fast, privacy-first QR code generator. Create high-resolution, fully customizable QR codes right in your browser — no sign-up, no tracking.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any (Web)",
@@ -120,7 +120,7 @@
     "Error correction levels L/M/Q/H",
     "100% client-side privacy — no tracking, no servers"
   ],
-  "screenshot": "https://bridgqr.example.com/og-image.png",
+  "screenshot": "https://dinugachamadith.github.io/BridgQR/og-image.png",
   "author": {
     "@type": "Organization",
     "name": "BridgQR"
@@ -130,25 +130,57 @@
 
 <style>
   /* ============================================================
-     BASE
+     GLOBAL RESET + OVERFLOW GUARD
      ============================================================ */
-  * { box-sizing: border-box; }
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* Prevent horizontal scroll at the root level */
+    overflow-x: clip;
+    max-width: 100%;
   }
+
   body {
     margin: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
     background: #05060a;
     color: #e2e8f0;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    overflow-x: hidden;
+    /* Triple-guard against horizontal scrolling */
+    overflow-x: clip;
+    overscroll-behavior-x: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
     text-rendering: optimizeLegibility;
   }
+
+  /* Every top-level section is constrained to the viewport width */
+  section,
+  header,
+  footer,
+  main,
+  nav {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
   ::selection { background: rgba(139, 92, 246, .5); color: #fff; }
 
   /* Custom scrollbar (desktop only) */
@@ -163,7 +195,7 @@
     ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #67e8f9, #a78bfa); }
   }
 
-  /* Prevent iOS zoom on input focus (requires ≥16px font) */
+  /* Prevent iOS zoom on input focus */
   @media (max-width: 767px) {
     input:not([type="range"]):not([type="color"]),
     select,
@@ -173,41 +205,60 @@
   }
 
   /* Safe-area insets for notched devices */
-  @supports (padding: max(0px)) {
+  @supports (padding: env(safe-area-inset-top)) {
     #nav {
       padding-top: env(safe-area-inset-top, 0px);
     }
-    footer {
+    footer > div {
       padding-bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px));
     }
     #toTop {
-      right: calc(1.5rem + env(safe-area-inset-right, 0px));
-      bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+      right: max(1.25rem, env(safe-area-inset-right, 1.25rem));
+      bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
     }
     .toast {
-      bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
     }
   }
 
   /* ============================================================
      BACKGROUND
      ============================================================ */
-  .bg-layer { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-  .orb { position: absolute; border-radius: 50%; filter: blur(100px); will-change: transform; }
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    /* Extra safety: clip any child that escapes */
+    clip-path: inset(0);
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    will-change: transform;
+  }
   .orb-1 {
-    width: min(62vw, 620px); aspect-ratio: 1;
+    width: min(62vw, 620px);
+    aspect-ratio: 1;
     background: radial-gradient(circle at 30% 30%, rgba(34,211,238,.85), transparent 68%);
-    top: -18%; left: -12%; opacity: .45; animation: drift1 20s ease-in-out infinite;
+    top: -18%; left: -12%; opacity: .45;
+    animation: drift1 20s ease-in-out infinite;
   }
   .orb-2 {
-    width: min(68vw, 700px); aspect-ratio: 1;
+    width: min(68vw, 700px);
+    aspect-ratio: 1;
     background: radial-gradient(circle at 60% 40%, rgba(139,92,246,.85), transparent 68%);
-    top: -22%; right: -16%; opacity: .45; animation: drift2 24s ease-in-out infinite;
+    top: -22%; right: -16%; opacity: .45;
+    animation: drift2 24s ease-in-out infinite;
   }
   .orb-3 {
-    width: min(72vw, 780px); aspect-ratio: 1;
+    width: min(72vw, 780px);
+    aspect-ratio: 1;
     background: radial-gradient(circle at 50% 50%, rgba(236,72,153,.55), transparent 68%);
-    bottom: -34%; left: 20%; opacity: .3; animation: drift3 28s ease-in-out infinite;
+    bottom: -34%; left: 20%; opacity: .3;
+    animation: drift3 28s ease-in-out infinite;
   }
   @keyframes drift1 { 50% { transform: translate3d(6vw, 5vh, 0) scale(1.12); } }
   @keyframes drift2 { 50% { transform: translate3d(-7vw, 7vh, 0) scale(1.08); } }
@@ -264,11 +315,13 @@
   .nav-link:hover::after { width: 100%; }
 
   #mobileMenu {
-    max-height: 0; opacity: 0; overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
     overscroll-behavior: contain;
     transition: max-height .5s cubic-bezier(.16,1,.3,1), opacity .4s;
   }
-  #mobileMenu.open { max-height: 400px; opacity: 1; }
+  #mobileMenu.open { max-height: 420px; opacity: 1; }
 
   /* ============================================================
      REVEAL ANIMATION
@@ -286,7 +339,7 @@
     position: relative; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
     font-weight: 600; border-radius: 14px; cursor: pointer;
-    min-height: 44px; /* accessible tap target */
+    min-height: 44px;
     transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s, background .3s, border-color .3s, color .3s;
   }
   .btn:active { transform: translateY(0) scale(.985); }
@@ -332,13 +385,32 @@
     -webkit-backdrop-filter: blur(20px) saturate(140%);
     backdrop-filter: blur(20px) saturate(140%);
   }
+
+  /* The aurora is a decorative glow behind the generator card.
+     Its negative inset is clamped so it never escapes the viewport. */
   .card-aurora {
-    position: absolute; inset: -34px; z-index: 0; border-radius: 46px;
+    position: absolute;
+    inset: -34px;
+    z-index: 0;
+    border-radius: 46px;
     background: conic-gradient(from 0deg, #22d3ee, #8b5cf6, #ec4899, #22d3ee);
-    filter: blur(64px); opacity: .22;
+    filter: blur(64px);
+    opacity: .22;
     animation: spinSlow 16s linear infinite;
+    pointer-events: none;
   }
   @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+  /* Shrink aurora on smaller screens so it can't cause horizontal scroll */
+  @media (max-width: 1023px) {
+    .card-aurora { inset: -18px; filter: blur(48px); }
+  }
+  @media (max-width: 640px) {
+    .card-aurora { inset: -8px; filter: blur(36px); opacity: .28; }
+  }
+  @media (max-width: 380px) {
+    .card-aurora { inset: -4px; filter: blur(28px); }
+  }
 
   /* ============================================================
      FORM CONTROLS
@@ -530,7 +602,7 @@
 </style>
 </head>
 
-<body class="min-h-screen antialiased">
+<body class="antialiased">
 
 <!-- Skip link (a11y) -->
 <a href="#generator"
@@ -549,7 +621,7 @@
 
 <!-- ================= NAV ================= -->
 <header id="nav" class="fixed inset-x-0 top-0 z-50">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between md:h-20">
 
       <!-- Logo -->
@@ -597,8 +669,8 @@
 </header>
 
 <!-- ================= HERO ================= -->
-<section id="home" class="relative z-10 px-4 pb-16 pt-32 sm:px-6 sm:pb-20 sm:pt-40 lg:px-8">
-  <div class="mx-auto max-w-4xl text-center">
+<section id="home" class="relative z-10 px-4 pb-14 pt-28 sm:px-6 sm:pb-20 sm:pt-40 lg:px-8">
+  <div class="mx-auto w-full max-w-4xl text-center">
 
     <div class="reveal inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-medium text-slate-300 backdrop-blur">
       <span class="relative flex h-2 w-2">
@@ -608,17 +680,17 @@
       Runs 100% in your browser · Zero tracking
     </div>
 
-    <h1 class="reveal mt-7 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl" style="transition-delay:.08s">
+    <h1 class="reveal mt-6 font-display text-[2rem] font-bold leading-[1.1] tracking-tight text-white sm:mt-7 sm:text-6xl sm:leading-[1.05] lg:text-7xl" style="transition-delay:.08s">
       Generate QR codes<br class="hidden sm:block" />
       <span class="grad-text">at the speed of light</span>
     </h1>
 
-    <p class="reveal mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg" style="transition-delay:.16s">
+    <p class="reveal mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-slate-400 sm:mt-6 sm:text-lg" style="transition-delay:.16s">
       BridgQR turns any link into a crisp, high-resolution QR code — fully customizable,
       instantly downloadable, and completely private.
     </p>
 
-    <div class="reveal mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center" style="transition-delay:.24s">
+    <div class="reveal mt-8 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center sm:justify-center" style="transition-delay:.24s">
       <a href="#generator" class="btn btn-primary px-7 py-3.5 text-sm">
         Start generating
         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -629,7 +701,7 @@
     </div>
 
     <!-- Stats -->
-    <div class="reveal mx-auto mt-14 grid max-w-lg grid-cols-3 gap-2 sm:gap-4" style="transition-delay:.32s">
+    <div class="reveal mx-auto mt-12 grid w-full max-w-lg grid-cols-3 gap-2 sm:mt-14 sm:gap-4" style="transition-delay:.32s">
       <div>
         <p class="font-display text-xl font-bold text-white stat-glow sm:text-2xl lg:text-3xl">0</p>
         <p class="mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500 sm:text-[11px] sm:tracking-[0.16em]">Bytes stored</p>
@@ -647,8 +719,8 @@
 </section>
 
 <!-- ================= GENERATOR ================= -->
-<section id="generator" class="relative z-10 scroll-mt-24 px-4 pb-20 sm:px-6 sm:pb-28 lg:px-8">
-  <div class="mx-auto max-w-6xl">
+<section id="generator" class="relative z-10 scroll-mt-24 px-3 pb-16 sm:px-6 sm:pb-28 lg:px-8" style="overflow: clip;">
+  <div class="mx-auto w-full max-w-6xl">
     <div class="relative">
       <div class="card-aurora" aria-hidden="true"></div>
 
@@ -656,22 +728,22 @@
         <div class="grid lg:grid-cols-[1fr_400px]">
 
           <!-- ---------- CONTROLS ---------- -->
-          <div class="p-5 sm:p-8 lg:p-10">
+          <div class="min-w-0 p-4 sm:p-8 lg:p-10">
 
             <div class="flex items-center gap-3">
-              <span class="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-300">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/>
                 </svg>
               </span>
-              <div>
+              <div class="min-w-0">
                 <h2 class="font-display text-lg font-semibold text-white">Generator</h2>
                 <p class="text-xs text-slate-500">Customize and export in real time</p>
               </div>
             </div>
 
             <!-- URL -->
-            <div class="mt-7">
+            <div class="mt-6 sm:mt-7">
               <label for="urlInput" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                 Destination URL
               </label>
@@ -690,34 +762,34 @@
             </div>
 
             <!-- Size -->
-            <div class="mt-6">
-              <div class="mb-3 flex items-center justify-between">
+            <div class="mt-5 sm:mt-6">
+              <div class="mb-3 flex items-center justify-between gap-3">
                 <label for="sizeRange" class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Export resolution</label>
-                <span id="sizeValue" class="rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-[11px] text-cyan-300">512 px</span>
+                <span id="sizeValue" class="shrink-0 rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-[11px] text-cyan-300">512 px</span>
               </div>
               <input id="sizeRange" type="range" min="256" max="1024" step="32" value="512" class="range" aria-label="Export resolution" />
             </div>
 
             <!-- Colors -->
-            <div class="mt-6 grid gap-4 sm:grid-cols-2">
-              <div>
+            <div class="mt-5 grid gap-4 sm:mt-6 sm:grid-cols-2">
+              <div class="min-w-0">
                 <label for="fgColor" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Foreground</label>
                 <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
                   <input id="fgColor" type="color" value="#0f172a" aria-label="Foreground color" />
-                  <span id="fgHex" class="font-mono text-xs uppercase text-slate-400">#0f172a</span>
+                  <span id="fgHex" class="truncate font-mono text-xs uppercase text-slate-400">#0f172a</span>
                 </div>
               </div>
-              <div>
+              <div class="min-w-0">
                 <label for="bgColor" class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Background</label>
                 <div class="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-2 pl-3">
                   <input id="bgColor" type="color" value="#ffffff" aria-label="Background color" />
-                  <span id="bgHex" class="font-mono text-xs uppercase text-slate-400">#ffffff</span>
+                  <span id="bgHex" class="truncate font-mono text-xs uppercase text-slate-400">#ffffff</span>
                 </div>
               </div>
             </div>
 
             <!-- Error correction -->
-            <div class="mt-6">
+            <div class="mt-5 sm:mt-6">
               <span class="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Error correction</span>
               <div id="levelGroup" class="grid grid-cols-4 gap-2" role="group" aria-label="Error correction level">
                 <button type="button" data-level="L" class="seg" aria-pressed="false">L</button>
@@ -730,7 +802,7 @@
               </p>
             </div>
 
-            <button id="generateBtn" type="button" class="btn btn-ghost mt-7 w-full py-3.5 text-sm">
+            <button id="generateBtn" type="button" class="btn btn-ghost mt-6 w-full py-3.5 text-sm sm:mt-7">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
               </svg>
@@ -739,8 +811,8 @@
           </div>
 
           <!-- ---------- PREVIEW ---------- -->
-          <div class="flex flex-col items-center justify-center gap-6 border-t border-white/[0.06] bg-white/[0.015] p-5 sm:p-8 lg:border-l lg:border-t-0">
-            <div class="w-full max-w-[280px] sm:max-w-[300px]">
+          <div class="flex min-w-0 flex-col items-center justify-center gap-6 border-t border-white/[0.06] bg-white/[0.015] p-4 sm:p-8 lg:border-l lg:border-t-0">
+            <div class="w-full max-w-[260px] sm:max-w-[300px]">
               <div class="relative">
                 <span class="corner tl"></span>
                 <span class="corner tr"></span>
@@ -753,7 +825,7 @@
               </div>
             </div>
 
-            <div class="w-full text-center">
+            <div class="w-full min-w-0 text-center">
               <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Encoded destination</p>
               <p id="urlLabel" class="mt-1.5 truncate font-mono text-xs text-cyan-300">https://example.com</p>
             </div>
@@ -781,23 +853,23 @@
 </section>
 
 <!-- ================= FEATURES ================= -->
-<section id="features" class="relative z-10 scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-  <div class="mx-auto max-w-6xl">
+<section id="features" class="relative z-10 scroll-mt-24 px-4 py-16 sm:px-6 sm:py-28 lg:px-8">
+  <div class="mx-auto w-full max-w-6xl">
 
     <div class="mx-auto max-w-2xl text-center">
       <p class="reveal text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400">Capabilities</p>
-      <h2 class="reveal mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
+      <h2 class="reveal mt-4 font-display text-2xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
         Built for the modern web
       </h2>
-      <p class="reveal mt-4 text-slate-400" style="transition-delay:.12s">
+      <p class="reveal mt-4 text-sm text-slate-400 sm:text-base" style="transition-delay:.12s">
         Everything you need to ship beautiful, scannable codes — and nothing you don't.
       </p>
     </div>
 
-    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
 
-      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]">
-        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-cyan-400/30 hover:bg-white/[0.04] sm:p-6">
+        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300 sm:mb-5">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
           </svg>
@@ -808,8 +880,8 @@
         </p>
       </div>
 
-      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.08s">
-        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-cyan-400/30 hover:bg-white/[0.04] sm:p-6" style="transition-delay:.08s">
+        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300 sm:mb-5">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25"/>
           </svg>
@@ -820,8 +892,8 @@
         </p>
       </div>
 
-      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.16s">
-        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-cyan-400/30 hover:bg-white/[0.04] sm:p-6" style="transition-delay:.16s">
+        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300 sm:mb-5">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 0 0 5.304 0l6.401-6.402M6.75 21A3.75 3.75 0 0 1 3 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 0 0 3.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008Z"/>
           </svg>
@@ -832,8 +904,8 @@
         </p>
       </div>
 
-      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 hover:border-cyan-400/30 hover:bg-white/[0.04]" style="transition-delay:.24s">
-        <div class="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300">
+      <div class="reveal feature-card rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 hover:border-cyan-400/30 hover:bg-white/[0.04] sm:p-6" style="transition-delay:.24s">
+        <div class="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-violet-500/20 text-cyan-300 sm:mb-5">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
           </svg>
@@ -849,17 +921,17 @@
 </section>
 
 <!-- ================= FAQ ================= -->
-<section id="faq" class="relative z-10 scroll-mt-24 px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-  <div class="mx-auto max-w-3xl">
+<section id="faq" class="relative z-10 scroll-mt-24 px-4 py-16 sm:px-6 sm:py-28 lg:px-8">
+  <div class="mx-auto w-full max-w-3xl">
 
     <div class="text-center">
       <p class="reveal text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-400">FAQ</p>
-      <h2 class="reveal mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
+      <h2 class="reveal mt-4 font-display text-2xl font-bold tracking-tight text-white sm:text-4xl" style="transition-delay:.06s">
         Questions, answered
       </h2>
     </div>
 
-    <div class="mt-12 space-y-3">
+    <div class="mt-10 space-y-3 sm:mt-12">
 
       <details class="reveal group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-4 transition-colors hover:border-white/20">
         <summary class="flex items-center justify-between gap-4 text-sm font-medium text-slate-200">
@@ -931,11 +1003,11 @@
 
 <!-- ================= FOOTER ================= -->
 <footer class="relative z-10 mt-10 border-t border-white/[0.07]">
-  <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+  <div class="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
 
     <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
-      <div class="lg:col-span-2">
+      <div class="sm:col-span-2 lg:col-span-2">
         <a href="#home" class="flex items-center gap-2.5" aria-label="BridgQR home">
           <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-600 shadow-lg shadow-cyan-500/30">
             <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -971,7 +1043,7 @@
 
     </div>
 
-    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/[0.07] pt-6 sm:flex-row">
+    <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/[0.07] pt-6 sm:mt-12 sm:flex-row sm:gap-4">
       <p class="text-xs text-slate-500">© <span id="year">2025</span> BridgQR. All rights reserved.</p>
       <p class="text-xs text-slate-500">Crafted with <span class="text-pink-400">♥</span> for the open web</p>
     </div>
@@ -980,7 +1052,7 @@
 
 <!-- Back to top -->
 <button id="toTop" type="button" aria-label="Back to top"
-  class="pointer-events-none fixed bottom-6 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 opacity-0 backdrop-blur transition-all duration-300 hover:border-cyan-400/50 hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60">
+  class="pointer-events-none fixed bottom-5 right-5 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-slate-300 opacity-0 backdrop-blur transition-all duration-300 hover:border-cyan-400/50 hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60">
   <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75 12 8.25l7.5 7.5"/>
   </svg>
